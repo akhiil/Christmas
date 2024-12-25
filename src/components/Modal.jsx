@@ -209,7 +209,7 @@ export function Modal5({ setActiveComponent }) {
               <option value="Park">Park</option>
               <option value="Restaurant">Restaurant</option>
               <option value="Cinema">Cinema</option>
-              <option value="Will tell me on call">Cinema</option>
+              <option value="Will tell me on call">Will tell me in call</option>
             </select>
           </div>
 
