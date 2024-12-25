@@ -1,0 +1,22 @@
+/* Snowfall styles */
+.snowfall-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+  }
+  
+  .snow {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    animation: fall linear infinite;
+  }
+  
+  @keyframes fall {
+    0% {
+      transform: translateY(-10vh) translateX(0);
+    }
+    100% {
+      transform: translateY(100vh) translateX(20px);
+    }
+  }
