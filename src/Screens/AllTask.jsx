@@ -22,13 +22,11 @@ const AllTask = () => {
   }, []);
 
   const deleteTask = (id, day) => {
-    // console.log(id, day);
     const modifiedDay = allData[day].filter((item) => {
       return item.id != id;
     });
     let newData = allData;
     newData[day] = modifiedDay;
-    console.log(newData);
     localStorage.setItem("allData", JSON.stringify(newData));
     window.dispatchEvent(new Event("storage"));
   };
