@@ -6,12 +6,14 @@ import AnimatedCheckbox from "../Components/checkBox";
 import { Modal } from "../Components/Modals";
 import { MenuBar } from "../Components/MeanuBar";
 import { useNavigate } from "react-router";
+import { SimpleModal } from "../Components/SimpleModal";
 
 const Homepage = () => {
   const today = new Date();
   const [todaysData, setTodaysData] = useState([]);
   const [issModalOpen, setIsModalOpen] = useState(false);
   const [openMeanubar, setIsOpenMeanuBar] = useState(false);
+  const [isSimpleModalOpen, setIsSimpleModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleCheckboxChange = (id) => {
@@ -45,6 +47,16 @@ const Homepage = () => {
     );
   };
 
+  const handlePrimaryClick = () => {
+    localStorage.clear();
+    window.dispatchEvent(new Event("storage"));
+    setIsSimpleModalOpen(false);
+  };
+
+  const handleSecondaryClick = () => {
+    setIsSimpleModalOpen(false);
+  };
+
   const handleData = (completed = []) => {
     if (!JSON.parse(localStorage.getItem("allData"))) {
       localStorage.setItem(
@@ -61,6 +73,7 @@ const Homepage = () => {
       );
     } else {
       const allData = JSON.parse(localStorage.getItem("allData"));
+      console.log(today.getDay());
       setTodaysData(
         allData[days[today.getDay()]].map((item) => {
           return { ...item, isChecked: completed?.includes(item.id) ?? false };
@@ -75,8 +88,8 @@ const Homepage = () => {
     let completed = localStorage.getItem("completedTask");
     if (!completed) {
       localStorage.setItem("completedTask", JSON.stringify([]));
-    }else{
-        completed = JSON.parse(completed)
+    } else {
+      completed = JSON.parse(completed);
     }
     const today = new Date();
     const exactToday = `${today.getDate()}-${today.getMonth()}-${today.getFullYear()}`;
@@ -94,12 +107,12 @@ const Homepage = () => {
 
   useEffect(() => {
     window.addEventListener("storage", () => {
-        handleData(completed)
+      handleData(completed);
     });
     return () => {
       window.removeEventListener("storage", () => {
-        handleData(completed)
-    });
+        handleData(completed);
+      });
     };
   }, []);
 
@@ -146,7 +159,9 @@ const Homepage = () => {
         <span style={{ fontFamily: "Monospace", fontSize: 20, fontStyle: "" }}>
           <u>Your today's Task</u>
         </span>
-        {todaysData.length===0 ? <h1 style={{marginTop: 20}}>Start adding your tasks below</h1> : null}
+        {todaysData.length === 0 ? (
+          <h1 style={{ marginTop: 20 }}>Start adding your tasks below</h1>
+        ) : null}
         {todaysData?.map((item, index) => {
           return (
             <AnimatedCheckbox
@@ -163,14 +178,26 @@ const Homepage = () => {
         onClose={() => setIsModalOpen(false)}
         onSave={onSave}
       />
+      <SimpleModal
+        title="Confirmation"
+        isOpen={isSimpleModalOpen}
+        onClose={() => isSimpleModalOpen(false)}
+        primaryButtonText="yes"
+        secondaryButtonText="No"
+        onPrimaryClick={handlePrimaryClick}
+        onSecondaryClick={handleSecondaryClick}
+      >
+        <p className="text-gray-600">
+          Are you sure you want to clear every tasks.
+        </p>
+      </SimpleModal>
       <div style={{ position: "absolute", right: 230, top: 40 }}>
         <MenuBar
           onViewAllTasks={() => {
             navigate("/allTask");
           }}
           onClearEverything={() => {
-            localStorage.clear();
-            window.dispatchEvent(new Event("storage"))
+            setIsSimpleModalOpen(true);
           }}
           onChangeTheme={{}}
           isOpen={openMeanubar}
